@@ -1,0 +1,50 @@
+ 3008                               Alice Rangel Vicente  8500.00f
+ 2806                              Andre Vicente Esteves  2500.00f
+ 2536                                        Bruno Ebert  2500.00f
+ 3008                               Alice Rangel Vicente  8500.00f
+ 2806                              Andre Vicente Esteves  2500.00f
+ 3261                                    Beatriz Pacheco  4000.00f
+ 2536                                        Bruno Ebert  2500.00f
+ 3163                            Dolores Teles Bernardes  6500.00f
+ 1169                                      Drauzio Jacob 15000.00f
+ 2253                                  Drauzio Rodrigues  4000.00f
+ 1180                                 Fabio Montes Oliva 25000.00f
+ 1946                                Fabio Xavi da Silva  6500.00f
+ 3433                                      Felix Queiroz 15000.00f
+ 2386                                Felix Silva Pereira  3500.00f
+ 3672                             Gustavo Ullmann Castro  2500.00f
+ 2933                              Henrique Zahn Ullmann 13000.00f
+ 1633                                      Irene Quercia  8500.00f
+ 2194                                        Irma Gentil 10000.00f
+ 2142                              Julia Encarnacao Cruz  8000.00f
+ 3373                                     Kamila Andrade 15000.00f
+ 2035                                       Kamila Oliva  8500.00f
+ 1340                                     Kendra Benitez  2000.00f
+ 2114                                   Kleber Fernandes  5000.00f
+ 2879                                     Kleber Quercia  8000.00f
+ 1210                                 Maria Leite Gentil  8500.00f
+ 3684                              Nando Oliveira Gentil  5500.00f
+ 3228                           Ofelia Fernandes Holanda  4000.00f
+ 3543                                   Ofelia Rodrigues  8500.00f
+ 3339                                        Otacilio Xu  6500.00f
+ 1515                                       Perla Macedo  7000.00f
+ 1333                                        Perla Veiga  3500.00f
+ 1768                                Quesia Xavi Pereira  5500.00f
+ 3524                                      Quinn Pacheco  9000.00f
+ 3482                             Quiteria Esteves Alves  5000.00f
+ 2333                          Rodrigo Bernardes Barbosa  3500.00f
+ 2618                                      Ronda Barbosa  8000.00f
+ 1288                                Sandra Jacob Garcia  7000.00f
+ 2483                                      Silvio Castro  8500.00f
+ 1020                                 Silvio Garcia Lins  5000.00f
+ 2155                             Silvio Zanatta Quercia  6500.00f
+ 1678                                     Tobias Hungria 18000.00f
+ 1438                          Ueverton Gonzalo Iglesias 20000.00f
+ 2823                                    Valter Teixeira  5500.00f
+ 2718                            Vinicius Cortez Benitez  4000.00f
+ 1324                            Viviane Borges Monteiro 15000.00f
+ 1854                              Viviane Jesus Quercia  6000.00f
+ 3618                          Viviane Quercia Goncalves  4000.00f
+ 1559                                        Xavier Ruiz 20000.00f
+ 3096                                 Zelia Rios Zanatta 15000.00f
+ 3327                                  Zorba Garcia Ruiz  7000.00f
