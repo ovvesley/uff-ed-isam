@@ -550,26 +550,9 @@ void* isam_ler_dado_chave_no_interno(T_ISAM *isam, int chave_reg){
     int aux =0;
     int pos = 0;
 
-    // Iteração não necessário, mas fazendo por garantia que os dados do indice esteja na mesma posição
-    for (int index_i = 1; index_i < isam->num_pag_dados; index_i++)
-    {
-        isam_ler_no_pos(isam, no_isam, index_i);
-        for (int index_j =0; index_j < isam->tam_pag_arq_dados; index_j++)
-        {
-            pos++;
-            if(no_isam->chaves[index_j] == chave_reg)
-            {
-                no_isam->chaves[chave_reg];
-                aux = 1;
-                break;
-            }
-        }
-        if (aux == 1) break;
-    }
-
     TFunc *dado =(TFunc *) func_criar();
 
-    isam->ler_dado_pos(isam->arq_dados,dado, pos);
+    isam->ler_dado_pos(isam->arq_dados,dado, chave_reg);
     return dado;
 
 }
@@ -592,8 +575,35 @@ TNo_ISAM *isam_buscar_no_folha(T_ISAM *isam, void *consulta){
 
 //Busca pelo dado no arquivo de dados que satisfaz a consulta
 void* isam_buscar(T_ISAM *isam, void *consulta){
+    TFunc * consultafunc = (TFunc *) consulta;
 
-//A implementar
+    TNo_ISAM * no_isam = isam_criar_no(isam,INTERNO);
+    isam_inicializar_no(no_isam);
+
+    isam_ler_no_pos(isam,no_isam, isam->raiz);
+
+    while (no_isam->tipo != FOLHA){
+        for (int index_i =0; index_i<isam->t-1; index_i++){
+            TFunc *dado = isam_ler_dado_chave_no_interno(isam, no_isam->chaves[index_i]);
+            if(consultafunc->cod <= dado->cod) {
+                isam_ler_no_pos(isam, no_isam, no_isam->filhos[index_i]);
+                break;
+            }
+            if(consultafunc->cod>= dado->cod && index_i == isam->t-2){
+                isam_ler_no_pos(isam, no_isam, no_isam->filhos[index_i+1]);
+                break;
+            }
+        }
+    }
+
+    TFunc *found = NULL;
+    for (int index =0; index<isam->t; index++){
+        TFunc *dado = isam_ler_dado_chave_no_interno(isam, no_isam->filhos[index]);
+        if(consultafunc->cod == dado->cod) { found = dado; break; }
+    }
+
+    return found;
+
 }
 
 
