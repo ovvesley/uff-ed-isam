@@ -610,8 +610,46 @@ void* isam_buscar(T_ISAM *isam, void *consulta){
 
 
 void isam_insere(T_ISAM *isam,void *dado){
+    TFunc * dadoToInser = (TFunc *) dado;
+    FILE *arq_dados = isam->arq_dados;
 
-//A implementar                
+    int lastPos = func_tam_arq(arq_dados);
+    //
+//    func_salvar_pos(arq_dados,dadoToInser,lastPos+1);
+
+    func_exportar_arq_texto(arq_dados, "arquivo_dados_after_insert.txt");
+
+    TNo_ISAM * no_isam = isam_criar_no(isam,INTERNO);
+    isam_ler_no_pos(isam,no_isam, isam->raiz);
+    TIndiceReg ponteiroPosicao = isam->raiz;
+
+    while (no_isam->tipo != FOLHA){
+        for (int index_i =0; index_i<isam->t-1; index_i++){
+            TFunc *dado = isam_ler_dado_chave_no_interno(isam, no_isam->chaves[index_i]);
+            if(dadoToInser->cod <= dado->cod) {
+                ponteiroPosicao = no_isam->filhos[index_i];
+                isam_ler_no_pos(isam, no_isam, no_isam->filhos[index_i]);
+                break;
+            }
+            if(dadoToInser->cod>= dado->cod && index_i == isam->t-2){
+                isam_ler_no_pos(isam, no_isam, no_isam->filhos[index_i+1]);
+                break;
+            }
+        }
+    }
+
+    for (int index =0; index<isam->t; index++){
+        if (no_isam->filhos[index] == -1){
+            no_isam->filhos[index] = lastPos;
+            no_isam->chaves[index] = lastPos;
+            break;
+        }
+    }
+
+    isam_salvar_no_pos(isam,no_isam, ponteiroPosicao);
+
+
+
 }
 
 

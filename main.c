@@ -155,22 +155,24 @@ void insere_registro(T_ISAM * isam_cod,T_ISAM *isam_nome){
     printf("\nCodigo:");
     scanf("%d",&cod);
     printf("\nDigite o nome:");
-    scanf("%f",nome);
+    scanf("%s",nome);
     printf("\nSalario:");
     fflush(stdin);
-    scanf("%f",&salario);
+    scanf("%lf",&salario);
     printf("\n");
 
     func_set(func,cod,nome,salario);
     printf("Atualizando indices de codigos para insercao\n");
     isam_insere(isam_cod,func);
+//    printf("codigo: %d, salario: %d\nnome: %s\n " &salario);
     printf("Atualizando indices de nomes para insercao\n");
-    isam_insere(isam_nome,func);
+//    isam_insere(isam_nome,func);
     printf("Salvando novo registro no arquivo de dados\n");
     func_salvar_pos(isam_cod->arq_dados,func,isam_cod->tam_arq_dados);
-    fflush(isam_nome->arq_dados);
+//    fflush(isam_nome->arq_dados);
+    fflush(isam_cod->arq_dados);
     func_exportar_arq_texto(isam_cod->arq_dados,"funcionarios_cod.txt");
-    func_exportar_arq_texto(isam_nome->arq_dados,"funcionarios_nome.txt");
+//    func_exportar_arq_texto(isam_nome->arq_dados,"funcionarios_nome.txt");
 
 }
 
@@ -325,15 +327,17 @@ void insercao(T_ISAM *isam_cod,T_ISAM *isam_nome, int cod, char nome[], float sa
     fprintf(isam_cod->arq_log,"Atualizando indices de nomes\n");
     fprintf(isam_cod->arq_log,"----------------------------------------------------------------------------------------------------------------------------------------\n");
 
-    isam_insere(isam_nome,func);
+//    isam_insere(isam_nome,func);:
 
     fprintf(isam_cod->arq_log,"----------------------------------------------------------------------------------------------------------------------------------------\n");
     fprintf(isam_cod->arq_log,"Registro salvo\n");
 
-    isam_cod->salvar_dado_pos(isam_cod->arq_dados,func,isam_cod->tam_arq_dados);
+    isam_cod->salvar_dado_pos(isam_cod->arq_dados,func,isam_cod->tam_arq_dados+1);
+    isam_cod->tam_arq_dados++;
+
     fflush(isam_cod->arq_dados);
-    isam_nome->salvar_dado_pos(isam_nome->arq_dados,func,isam_nome->tam_arq_dados);
-    fflush(isam_nome->arq_dados);
+//    isam_nome->salvar_dado_pos(isam_nome->arq_dados,func,isam_nome->tam_arq_dados);
+//    fflush(isam_nome->arq_dados);
     func = func_liberar(func);
     fprintf(isam_cod->arq_log,"----------------------------------------------------------------------------------------------------------------------------------------\n");
 
@@ -345,7 +349,7 @@ void insercao(T_ISAM *isam_cod,T_ISAM *isam_nome, int cod, char nome[], float sa
 
 }
 
-void teste_consulta_simples_por_codigo(T_ISAM *isam_cod, T_ISAM *isam_nome){
+void teste_consulta_simples_por_codigo(T_ISAM *isam_cod){
 
     fprintf(isam_cod->arq_log," _______________________________________________________________________________________________________________________________________\n");
     fprintf(isam_cod->arq_log,"|                                                                                                                                       |\n");
@@ -356,10 +360,13 @@ void teste_consulta_simples_por_codigo(T_ISAM *isam_cod, T_ISAM *isam_nome){
 
 
 
-    consulta_por_cod(isam_cod,1144);
-    consulta_por_cod(isam_cod,1122);
-    consulta_por_cod(isam_cod,1377);
-    consulta_por_cod(isam_cod,1511);
+    consulta_por_cod(isam_cod,2114);
+    consulta_por_cod(isam_cod,2194);
+    consulta_por_cod(isam_cod,3482);
+    consulta_por_cod(isam_cod,3684);
+    consulta_por_cod(isam_cod,1);
+    consulta_por_cod(isam_cod,1000);
+
 
 
 }
@@ -397,9 +404,9 @@ void teste_insercao_simples(T_ISAM *isam_cod, T_ISAM *isam_nome){
     fprintf(isam_cod->arq_log,"|_______________________________________________________________________________________________________________________________________|\n");
 
 
-    insercao(isam_cod,isam_nome,1002,"Antonio Carlos",2345.0);
-    insercao(isam_cod,isam_nome,2304,"Marcelo Moreira da Silva",1234.0);
-    insercao(isam_cod,isam_nome,1890,"Pedro Moreira da Silva",4321.0);
+    insercao(isam_cod,NULL,1002,"Antonio Carlos",2345.0);
+    insercao(isam_cod,NULL,2304,"Marcelo Moreira da Silva",1234.0);
+    insercao(isam_cod,NULL,1890,"Pedro Moreira da Silva",4321.0);
 
 
 }
@@ -484,8 +491,6 @@ void testes(T_ISAM *isam_cod, T_ISAM *isam_nome){
     TFunc *dado = isam_cod->criar_dado();
     dado->cod = 1000;
 
-
-
     TFunc * found = isam_buscar(isam_cod,dado);
 
     printf("Found = %s", found->nome);
@@ -536,28 +541,12 @@ int main(){
     isam_registra_callback_tam_reg_dados(isam_cod, func_tam_reg);
     isam_criar_paginas(isam_cod);
 
-    //Cria o arquivo binario ordenado por nome
-    gera_arquivo_ordenado("funcionarios.bin","funcionarios_nome.bin","funcionarios_nome.txt",comparar_nome);
+//    teste_consulta_simples_por_codigo(isam_cod);
+//    teste_insercao_simples(isam_cod, NULL);
 
-    //Criar o indice de nomes
-    T_ISAM * isam_nome = isam_inicializar("ind_nome.bin","funcionarios_nome.bin",arq_log,5,2,4);
-    isam_registra_callback_comparar(isam_nome, comparar_nome);
-    isam_registra_callback_ler_dado(isam_nome, ler_dado_func);
-    isam_registra_callback_salvar_dado(isam_nome, salvar_dado_func);
-    isam_registra_callback_criar_dado(isam_nome,criar_dado_func);
-    isam_registra_callback_liberar_dado(isam_nome,liberar_dado_func);
-    isam_registra_callback_imprimir_dado(isam_nome,imprimir_dado_func);
-    isam_registra_callback_tam_arq_dados(isam_nome, func_tam_arq);
-    isam_registra_callback_tam_reg_dados(isam_nome, func_tam_reg);
-    isam_criar_paginas(isam_nome);
-
-
-    menu(isam_cod,isam_nome);
-
-//    testes(isam_cod,isam_nome);
+    menu(isam_cod,NULL);
 
     isam_finalizar(isam_cod);
-    isam_finalizar(isam_nome);
     fclose(arq_log);
 
     return 0;

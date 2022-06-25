@@ -5,11 +5,12 @@
 #include <math.h>
 
 typedef struct func{int cod;
-                    char nome[50];
-                    float salario;}TFunc;
+    char nome[50];
+    double salario;}
+    TFunc;
 
 typedef struct pag_func{int tam_pag;
-                        TFunc *regs;} TPag_Func;
+    TFunc *regs;} TPag_Func;
 
 char * func_gerar_nome(char nome[50]);
 
