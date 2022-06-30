@@ -272,7 +272,7 @@ void imprime_resultado_busca(T_ISAM *isam,TFunc *func){
     }
 }
 
-void consulta_por_cod(T_ISAM *isam, int cod){
+void consulta_por_cod(T_ISAM *isam, int cod, void *expected){
     fprintf(isam->arq_log," _______________________________________________________________________________________________________________________________________\n");
     fprintf(isam->arq_log,"|                                                                                                                                       |\n");
     fprintf(isam->arq_log,"|                                                    Consulta pelo codigo:%d                                                          |\n",cod);
@@ -283,6 +283,27 @@ void consulta_por_cod(T_ISAM *isam, int cod){
     fprintf(isam->arq_log,"----------------------------------------------------------------------------------------------------------------------------------------\n");
     fprintf(isam->arq_log,"________________________________________________________________________________________________________________________________________\n");
     fprintf(isam->arq_log,"\n\n");
+
+
+    if(!func && expected != NULL){
+        printf("Teste %d : FALHOU. Codigos não encontrado. \n", cod);
+        return;
+    }
+
+    if(func && func->cod != (int) expected) {
+        printf("Teste %d : FALHOU. Codigos inválidos. \n", cod);
+        return;
+    }
+
+
+    if(func == NULL && expected == NULL) {
+        printf("Teste %d : OK\n", cod);
+        return;
+    }
+
+    printf("Teste %d : OK\n", cod);
+    return;
+
 }
 
 void consulta_por_nome(T_ISAM *isam, char nome[]){
@@ -359,12 +380,12 @@ void teste_consulta_simples_por_codigo(T_ISAM *isam_cod){
 
 
 
-    consulta_por_cod(isam_cod,2114);
-    consulta_por_cod(isam_cod,2194);
-    consulta_por_cod(isam_cod,3482);
-    consulta_por_cod(isam_cod,3684);
-    consulta_por_cod(isam_cod,1);
-    consulta_por_cod(isam_cod,1000);
+    consulta_por_cod(isam_cod,2114, 2114);
+    consulta_por_cod(isam_cod,2194, 2194);
+    consulta_por_cod(isam_cod,3482, 3482);
+    consulta_por_cod(isam_cod,3684, 3684);
+    consulta_por_cod(isam_cod,1, NULL);
+    consulta_por_cod(isam_cod,1000, 1000);
 
 
 
@@ -445,14 +466,14 @@ void teste_consulta_overflow_por_codigo(T_ISAM *isam_cod, T_ISAM *isam_nome){
 
 
 
-    consulta_por_cod(isam_cod,1002);
-    consulta_por_cod(isam_cod,2304);
-    consulta_por_cod(isam_cod,1890);
-    consulta_por_cod(isam_cod,2500);
-    consulta_por_cod(isam_cod,2550);
-    consulta_por_cod(isam_cod,2560);
-    consulta_por_cod(isam_cod,2580);
-    consulta_por_cod(isam_cod,2585);
+    consulta_por_cod(isam_cod,1002, 1002);
+    consulta_por_cod(isam_cod,2304, 2304);
+    consulta_por_cod(isam_cod,1890, 1890);
+    consulta_por_cod(isam_cod,2500, 2500);
+    consulta_por_cod(isam_cod,2550, 2550);
+    consulta_por_cod(isam_cod,2560, 2560);
+    consulta_por_cod(isam_cod,2580, 2580);
+    consulta_por_cod(isam_cod,2585, 2585);
 
 }
 

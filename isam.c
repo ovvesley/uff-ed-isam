@@ -596,9 +596,15 @@ void* isam_buscar(T_ISAM *isam, void *consulta){
         {
             TFunc * func = isam_ler_dado_chave_no_interno(isam, no_isam->chaves[index_i]);
 
-            if(consultafunc->cod <= func->cod)
+            if(consultafunc->cod < func->cod)
             {
                 isam_ler_no_pos(isam, no_isam, no_isam->filhos[index_i]);
+                break;
+            }
+
+            if(consultafunc->cod == func->cod)
+            {
+                isam_ler_no_pos(isam, no_isam, no_isam->filhos[index_i+1]);
                 break;
             }
 
@@ -640,9 +646,7 @@ void* isam_buscar(T_ISAM *isam, void *consulta){
         }
     }while(!found && !end_overflow);
 
-
     return found;
-
 }
 
 
@@ -733,7 +737,6 @@ void isam_insere(T_ISAM *isam,void *dado){
             int tam_arquivo_indice = func_tam_reg_indices(isam);
             position = tam_arquivo_indice + 1;
         }
-
 
         isam_salvar_no_pos(isam,current_no_isam, position);
         no_isam->prox = position;
