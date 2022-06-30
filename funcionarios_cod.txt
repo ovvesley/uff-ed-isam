@@ -47,4 +47,12 @@
  3543                                   Ofelia Rodrigues  8500.00f
  3618                          Viviane Quercia Goncalves  4000.00f
  3672                             Gustavo Ullmann Castro  2500.00f
- 1002                                             Wesley  1000.00f
+ 3684                              Nando Oliveira Gentil  5500.00f
+ 1002                                     Antonio Carlos  2345.00f
+ 2304                           Marcelo Moreira da Silva  1234.00f
+ 1890                             Pedro Moreira da Silva  4321.00f
+ 2500                              Bianca Souza da Silva  2000.00f
+ 2550                               Andre Souza da Silva  2300.00f
+ 2560                              Marcos Paulo da Silva  2500.00f
+ 2580                               Lucas da Silva Viana  7000.00f
+ 2585                               Bruno da Silva Viana  4000.00f

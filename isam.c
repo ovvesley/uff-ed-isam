@@ -23,7 +23,7 @@
 
 
 /************************************************************************************/
-/*Funcoes utilitarias                                                               */   
+/*Funcoes utilitarias                                                               */
 /************************************************************************************/
 
 int isam_tam_reg_indices(T_ISAM *isam){
@@ -55,18 +55,18 @@ void isam_copiar_arquivo_binario(FILE * arq_bin, char * nome_arq){
 }
 
 TIndiceReg isam_pos_arq_ind(T_ISAM *isam){
-    int pos = ftell(isam->arq_ind)/isam_tam_reg_indices(isam);   
+    int pos = ftell(isam->arq_ind)/isam_tam_reg_indices(isam);
     return pos;
 }
 
 
 TIndiceReg isam_pos_arq_dados(T_ISAM *isam){
-    int pos = ftell(isam->arq_dados)/isam->calcula_tam_arq_reg(isam->arq_dados); 
+    int pos = ftell(isam->arq_dados)/isam->calcula_tam_arq_reg(isam->arq_dados);
     return pos;
 }
 
 /************************************************************************************/
-/*Infrastrutura basica para gerenciamento de nos pagina                             */   
+/*Infrastrutura basica para gerenciamento de nos pagina                             */
 /************************************************************************************/
 
 //Inicializa os valores de chave e filhos um no correspondente a uma pagina
@@ -78,7 +78,7 @@ void isam_inicializar_no(TNo_ISAM *no){
         no->chaves[i] = NULO;
         no->filhos[i] = NULO;
     }
-    
+
     no->filhos[no->t-1] = NULO;
     no->prox = NULO;
 
@@ -112,7 +112,7 @@ TNo_ISAM *isam_liberar_no(TNo_ISAM *no){
 
 //Imprime um no
 void isam_imprimir_no(T_ISAM *isam, TNo_ISAM *no){
- 
+
     switch(no->tipo){
         case INTERNO: fprintf(isam->arq_log,"|tipo:I|");
         break;
@@ -132,13 +132,13 @@ void isam_imprimir_no(T_ISAM *isam, TNo_ISAM *no){
         else{
             fprintf(isam->arq_log,"|c_(%3d)=INF|",i);
         }
-    } 
+    }
     fprintf(isam->arq_log," ");
 
     for (int i=0;i<no->t;i++){
         fprintf(isam->arq_log,"|f_(%3d)=%3d|",i,no->filhos[i]);
-        
-    } 
+
+    }
     if (no->tipo !=INTERNO){
         fprintf(isam->arq_log,"|p=%d|",no->prox);
     }
@@ -158,10 +158,18 @@ void  isam_salvar_no(T_ISAM *isam, TNo_ISAM *no){
 }
 
 //Salva um no pagina em disco na posicao dada por indice
-void  isam_salvar_no_pos(T_ISAM *isam, TNo_ISAM *no,TIndiceReg indice){       
+void  isam_salvar_no_pos(T_ISAM *isam, TNo_ISAM *no,TIndiceReg indice){
     fseek(isam->arq_ind,(indice-1)*isam_tam_reg_indices(isam),SEEK_SET);
     isam_salvar_no(isam,no);
-}   
+}
+
+// Salva
+int func_tam_reg_indices(T_ISAM *isam) {
+    fseek(isam->arq_ind, 0, SEEK_END);
+    int tam = trunc(ftell(isam->arq_ind) / isam_tam_reg_indices(isam));
+    return tam;
+}
+
 
 //Le um no pagina em disco da posicao corrente
 void isam_ler_no(T_ISAM *isam, TNo_ISAM * no){
@@ -171,10 +179,10 @@ void isam_ler_no(T_ISAM *isam, TNo_ISAM * no){
     fread(no->chaves,sizeof(long int),(isam->t-1),isam->arq_ind);
     fread(no->filhos,sizeof(long int),(isam->t),isam->arq_ind);
     fread(&no->prox,sizeof(long int),1,isam->arq_ind);
-}                               
+}
 
 //Le um no pagina em disco da posicao dada por indice
-void isam_ler_no_pos(T_ISAM *isam, TNo_ISAM * no, TIndiceReg indice){    
+void isam_ler_no_pos(T_ISAM *isam, TNo_ISAM * no, TIndiceReg indice){
     fseek(isam->arq_ind,(indice-1)*isam_tam_reg_indices(isam),SEEK_SET);
     isam_ler_no(isam,no);
 
@@ -182,7 +190,7 @@ void isam_ler_no_pos(T_ISAM *isam, TNo_ISAM * no, TIndiceReg indice){
 
 
 /************************************************************************************/
-/*Funcoes para criacao do arquivo de indices ISAM                                   */   
+/*Funcoes para criacao do arquivo de indices ISAM                                   */
 /************************************************************************************/
 
 
@@ -204,7 +212,7 @@ T_ISAM * isam_inicializar(char *nome_arq_ind, char *nome_arq_dados, FILE * arq_l
 
     isam->t = t;
     fprintf(isam->arq_log,"Arquivo ISAM inicializado com t = %d  (%d filhos e %d chaves) \n",isam->t,isam->t,isam->t-1);
-    
+
     FILE * arq_i = fopen(nome_arq_ind,"wb+");
     if (!arq_i){
         fprintf(isam->arq_log,"Nao foi possivel criar arquivo de indices\n");
@@ -217,7 +225,7 @@ T_ISAM * isam_inicializar(char *nome_arq_ind, char *nome_arq_dados, FILE * arq_l
     isam->tam_pag_arq_ind = tam_pag_arq_ind;
     fprintf(isam->arq_log,"Arquivo de indices %s para o arquivo %s foi criado\n",nome_arq_ind,nome_arq_dados);
     fprintf(isam->arq_log,"Tamanho da pagina do arquivo de indices: %d\n",isam->tam_pag_arq_ind);
- 
+
     FILE * arq_d = fopen(nome_arq_dados,"rb+");
     if (!arq_d){
         fprintf(isam->arq_log,"Nao foi possivel criar arquivo de dados\n");
@@ -225,7 +233,7 @@ T_ISAM * isam_inicializar(char *nome_arq_ind, char *nome_arq_dados, FILE * arq_l
         exit(1);
     }
 
-  
+
     isam->arq_dados = arq_d;
     isam->tam_arq_dados = 0;
     isam->tam_pag_arq_dados = tam_pag_arq_dados;
@@ -252,7 +260,7 @@ void isam_finalizar(T_ISAM *isam){
 
 /* Cria as paginas de dados e salva no inicio do arquivo de indices */
 void isam_criar_paginas_de_dados(T_ISAM *isam){
- 
+
     fprintf(isam->arq_log,"Tamanho (#registros) do arquivo de dados: %d\n",isam->tam_arq_dados);
     isam->tam_arq_dados = isam->calcula_tam_arq_dados(isam->arq_dados);
 
@@ -260,11 +268,11 @@ void isam_criar_paginas_de_dados(T_ISAM *isam){
 
     //Cria um no_isam em memoria principal para trabalho */
     TNo_ISAM * no_isam = isam_criar_no(isam,FOLHA);
-    
+
     //Inicializa a pagina de dados
     isam->num_pag_dados = 0;
 
-    //Faz o cursor do arquivo apontar para o inicio 
+    //Faz o cursor do arquivo apontar para o inicio
     fseek(isam->arq_ind,0,SEEK_SET);
 
     // Cria cada uma das paginas
@@ -281,14 +289,14 @@ void isam_criar_paginas_de_dados(T_ISAM *isam){
             fprintf(isam->arq_log,"Registro do arquivo de dados lido da posicao %d\n",i+j);
             #endif
             no_isam->chaves[j] = i+j;
-            no_isam->filhos[j] = i+j;            
+            no_isam->filhos[j] = i+j;
             no_isam->n++;
         }
         //Incrementa o numero de paginas de dados
         isam->num_pag_dados++;
         //Salva o no no arquivo de indices na secao de paginas de dados
         isam_salvar_no(isam,no_isam);
-        
+
         #ifdef DEPURACAO
         isam_imprimir_no(isam,no_isam);
         #endif
@@ -314,7 +322,7 @@ void isam_imprimir_paginas_de_dados(T_ISAM *isam){
     //Le cada uma das paginas de dados e  imprime
     for (int i=1;i<=isam->num_pag_dados;i++){
         isam_ler_no(isam,no_isam);
-        isam_imprimir_no(isam,no_isam);    
+        isam_imprimir_no(isam,no_isam);
      }
     //Libera o no de trabalho
     no_isam = isam_liberar_no(no_isam);
@@ -322,7 +330,7 @@ void isam_imprimir_paginas_de_dados(T_ISAM *isam){
 }
 
 void isam_inicializa_filas_paginas_folha(T_ISAM *isam, TF * f_ind, TF *f_chaves, TF *f_niveis){
-    
+
 
     //Cria um no tipo folha para trabalho em memoria principal
     TNo_ISAM *no_isam_folha = isam_criar_no(isam,FOLHA);
@@ -332,7 +340,7 @@ void isam_inicializa_filas_paginas_folha(T_ISAM *isam, TF * f_ind, TF *f_chaves,
 
     //Coloca os indices, chaves maximas da subarvore de cada no, e nivel (= 0)
     //das paginas de dados em tres filas
- 
+
     for (int i=1;i<=isam->num_pag_dados;i++){
         isam_ler_no(isam,no_isam_folha);
         #ifdef DEPURACAO
@@ -349,10 +357,10 @@ void isam_inicializa_filas_paginas_folha(T_ISAM *isam, TF * f_ind, TF *f_chaves,
 }
 
 void isam_criar_paginas_de_indices(T_ISAM *isam){
-    //Poderia-se criar um fila de struct especifica, mas por simplificacao 
+    //Poderia-se criar um fila de struct especifica, mas por simplificacao
     //criou-se 3 fila de inteiros
-    //Inicializa a fila de indices, a fila de chaves maximas da subarvore e a fila de niveis das paginas 
-    TF *f_ind = TF_inicializa(); 
+    //Inicializa a fila de indices, a fila de chaves maximas da subarvore e a fila de niveis das paginas
+    TF *f_ind = TF_inicializa();
     TF *f_chaves = TF_inicializa();
     TF *f_niveis = TF_inicializa();
 
@@ -366,7 +374,7 @@ void isam_criar_paginas_de_indices(T_ISAM *isam){
     //Adiciona os dados das paginas folhas nas filas para contrucao da arvore
     isam_inicializa_filas_paginas_folha(isam, f_ind, f_chaves, f_niveis);
 
-   
+
     fprintf(isam->arq_log,"Criando paginas de indices do arquivo de indices...\n");
     fseek(isam->arq_ind,isam->ini_pag_indices,SEEK_SET);
 
@@ -400,21 +408,21 @@ void isam_criar_paginas_de_indices(T_ISAM *isam){
             nivel_atual = nivel;
             fprintf(isam->arq_log,"Paginas de indice do nivel %d \n",nivel_atual);
         }
-        
+
 
         //Inicializa os campos de indice 0 no nó interno
         isam_inicializar_no(no_isam_interno);
         no_isam_interno->tipo = INTERNO;
         //Armazena a primeira chave e o primeiro filho
         no_isam_interno->chaves[0] = chave+1;
-        no_isam_interno->filhos[0] = reg_id;  
+        no_isam_interno->filhos[0] = reg_id;
         no_isam_interno->n++;
         //Remove no maximo mais t-1 paginas da fila para formar a nova pagina interna
         //A fila pode ficar vazia ou o nivel mudar o que significa que a pagina deve ser encerrada
 
         for (int i=1;i<isam->t;i++){
             //Se a fila nao estiver vazia
-            if (TF_vazia(f_ind)) break;        
+            if (TF_vazia(f_ind)) break;
             //Consulta sem remover o nivel da pagina
             int nivel_no = TF_peek(f_niveis);
             //Se a pagina for de mesmo nivel que o nivel atual
@@ -426,13 +434,13 @@ void isam_criar_paginas_de_indices(T_ISAM *isam){
             nivel = TF_retira(f_niveis);
             //Atualiza a chave maxima do grupo de paginas do novo no
             max_chave = chave>max_chave?chave:max_chave;
-        
+
             //Armazena a chave como sendo o sucessor da chave maxima da subárvore
             //ou MAX_REG se ultrapassar o total de registro do arquivo de dados
-            
+
             if (i<isam->t-1){
                 if (chave<isam->tam_arq_dados){
-                    no_isam_interno->chaves[i] = chave+1;    
+                    no_isam_interno->chaves[i] = chave+1;
                 }
                 else{
                     no_isam_interno->chaves[i] = INFINITO;
@@ -444,7 +452,7 @@ void isam_criar_paginas_de_indices(T_ISAM *isam){
         }
 
 
-       //Salva a nova pagina no disco 
+       //Salva a nova pagina no disco
        isam_salvar_no(isam,no_isam_interno);
        //Imprime para depuracao
        isam_imprimir_no(isam,no_isam_interno);
@@ -459,8 +467,8 @@ void isam_criar_paginas_de_indices(T_ISAM *isam){
        }
        //Senao ele se torna a raiz da arvore
        else{
-           //Armazena o indice do registro da ultima pagina no campo raiz do ISAM 
-           isam->raiz = isam->num_pag_dados+isam->num_pag_indices; 
+           //Armazena o indice do registro da ultima pagina no campo raiz do ISAM
+           isam->raiz = isam->num_pag_dados+isam->num_pag_indices;
        }
     }
 
@@ -470,11 +478,11 @@ void isam_criar_paginas_de_indices(T_ISAM *isam){
    TF_libera(f_chaves);
    TF_libera(f_niveis);
 
-   //Descarrega os registros do buffer para o disco 
+   //Descarrega os registros do buffer para o disco
    fflush(isam->arq_ind);
    //Libera o no ISAM
    no_isam_interno = isam_liberar_no(no_isam_interno);
-       
+
 }
 
 
@@ -489,7 +497,7 @@ void isam_imprimir_paginas_de_indices(T_ISAM *isam){
 
     for (int i=1;i<=isam->num_pag_indices;i++){
         isam_ler_no(isam,no_isam);
-        isam_imprimir_no(isam,no_isam);    
+        isam_imprimir_no(isam,no_isam);
     }
     no_isam = isam_liberar_no(no_isam);
     fprintf(isam->arq_log,"\n\n");
@@ -579,28 +587,59 @@ void* isam_buscar(T_ISAM *isam, void *consulta){
 
     TNo_ISAM * no_isam = isam_criar_no(isam,INTERNO);
     isam_inicializar_no(no_isam);
+    int closed = 0;
 
     isam_ler_no_pos(isam,no_isam, isam->raiz);
 
-    while (no_isam->tipo != FOLHA){
-        for (int index_i =0; index_i<isam->t-1; index_i++){
-            TFunc *dado = isam_ler_dado_chave_no_interno(isam, no_isam->chaves[index_i]);
-            if(consultafunc->cod <= dado->cod) {
+    while (no_isam->tipo != FOLHA && no_isam->tipo != OVERFLOW && closed == 0){
+        for (int index_i =0; index_i<isam->t-1; index_i++)
+        {
+            TFunc * func = isam_ler_dado_chave_no_interno(isam, no_isam->chaves[index_i]);
+
+            if(consultafunc->cod <= func->cod)
+            {
                 isam_ler_no_pos(isam, no_isam, no_isam->filhos[index_i]);
                 break;
             }
-            if(consultafunc->cod>= dado->cod && index_i == isam->t-2){
+
+            if(index_i == isam->t-2 && consultafunc->cod >= func->cod){
                 isam_ler_no_pos(isam, no_isam, no_isam->filhos[index_i+1]);
                 break;
             }
+
+            if(index_i == isam->t-2){
+                closed = 1;
+                break;
+            }
+
         }
+
     }
 
     TFunc *found = NULL;
-    for (int index =0; index<isam->t; index++){
-        TFunc *dado = isam_ler_dado_chave_no_interno(isam, no_isam->filhos[index]);
-        if(consultafunc->cod == dado->cod) { found = dado; break; }
-    }
+    TNo_ISAM *current_no = NULL;
+    int end_overflow = 0;
+
+    do {
+        for (int index =0; index<isam->t; index++){
+            current_no = no_isam;
+
+            if (current_no->filhos[index] == NULO) continue;
+
+            TFunc *dado = isam_ler_dado_chave_no_interno(isam, current_no->filhos[index]);
+            if(consultafunc->cod == dado->cod) { found = dado; break; }
+        }
+
+        if (!found && current_no && current_no->prox != NULO){
+            isam_ler_no_pos(isam,current_no, current_no->prox);
+            continue;
+        }
+
+        if (!found && current_no && current_no->prox == NULO){
+            end_overflow = 1;
+        }
+    }while(!found && !end_overflow);
+
 
     return found;
 
@@ -614,42 +653,93 @@ void isam_insere(T_ISAM *isam,void *dado){
     FILE *arq_dados = isam->arq_dados;
 
     int lastPos = func_tam_arq(arq_dados);
-    //
-//    func_salvar_pos(arq_dados,dadoToInser,lastPos+1);
-
-    func_exportar_arq_texto(arq_dados, "arquivo_dados_after_insert.txt");
 
     TNo_ISAM * no_isam = isam_criar_no(isam,INTERNO);
+
     isam_ler_no_pos(isam,no_isam, isam->raiz);
     TIndiceReg ponteiroPosicao = isam->raiz;
+    int closed = 0;
 
-    while (no_isam->tipo != FOLHA){
-        for (int index_i =0; index_i<isam->t-1; index_i++){
-            TFunc *dado = isam_ler_dado_chave_no_interno(isam, no_isam->chaves[index_i]);
-            if(dadoToInser->cod <= dado->cod) {
+    while (no_isam->tipo != FOLHA)
+    {
+        for (int index_i =0; index_i<isam->t-1; index_i++)
+        {
+            TFunc * func = isam_ler_dado_chave_no_interno(isam, no_isam->chaves[index_i]);
+
+            if(dadoToInser->cod <= func->cod)
+            {
                 ponteiroPosicao = no_isam->filhos[index_i];
                 isam_ler_no_pos(isam, no_isam, no_isam->filhos[index_i]);
                 break;
             }
-            if(dadoToInser->cod>= dado->cod && index_i == isam->t-2){
+
+            if(index_i == isam->t-2 && dadoToInser->cod >= func->cod){
+                ponteiroPosicao = no_isam->filhos[index_i+1];
                 isam_ler_no_pos(isam, no_isam, no_isam->filhos[index_i+1]);
+                break;
+            }
+
+            if(index_i == isam->t-2){
+                closed = 1;
                 break;
             }
         }
     }
 
-    for (int index =0; index<isam->t; index++){
-        if (no_isam->filhos[index] == -1){
-            no_isam->filhos[index] = lastPos;
-            no_isam->chaves[index] = lastPos;
-            break;
+    TNo_ISAM * current_no_isam = NULL;
+    current_no_isam = no_isam;
+    int is_overflow_insert = 1;
+    int is_overflow_created = 0;
+    TIndiceReg last_no_positions_before_overflow = NULO;
+
+
+    // trativa do overflow
+    do {
+        for (int index =0; index<isam->t-1; index++)
+        {
+            if (current_no_isam->filhos[index] == NULO)
+            {
+                current_no_isam->filhos[index] = lastPos + 1;
+                current_no_isam->chaves[index] = lastPos + 1;
+                is_overflow_insert = 0;
+                break;
+            }
         }
+
+        if (is_overflow_insert)
+        {
+            if (current_no_isam->prox != NULO)
+            {
+                TIndiceReg prox = current_no_isam->prox;
+                current_no_isam = isam_criar_no(isam, OVERFLOW);
+                isam_inicializar_no(current_no_isam);
+
+                isam_ler_no_pos(isam,current_no_isam, prox);
+            }
+            else
+            {
+                is_overflow_created = 1;
+                current_no_isam = isam_criar_no(isam, OVERFLOW);
+                isam_inicializar_no(current_no_isam);
+            }
+        }
+
+    }while(is_overflow_insert != 0);
+
+    if (current_no_isam->tipo == OVERFLOW){
+
+        int position = no_isam->prox;
+        if(position == NULO){
+            int tam_arquivo_indice = func_tam_reg_indices(isam);
+            position = tam_arquivo_indice + 1;
+        }
+
+
+        isam_salvar_no_pos(isam,current_no_isam, position);
+        no_isam->prox = position;
     }
 
     isam_salvar_no_pos(isam,no_isam, ponteiroPosicao);
-
-
-
 }
 
 

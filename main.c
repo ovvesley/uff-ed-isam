@@ -195,7 +195,6 @@ void menu(T_ISAM * isam_cod,T_ISAM *isam_nome){
                 break;
             case 'n': menu_consulta_por_nome(isam_nome);
                 break;
-
             case 'c': menu_consulta_por_codigo(isam_cod);
                 break;
             case 'x': continua = 0;
@@ -541,10 +540,11 @@ int main(){
     isam_registra_callback_tam_reg_dados(isam_cod, func_tam_reg);
     isam_criar_paginas(isam_cod);
 
-//    teste_consulta_simples_por_codigo(isam_cod);
-//    teste_insercao_simples(isam_cod, NULL);
-
-    menu(isam_cod,NULL);
+    teste_insercao_simples(isam_cod, NULL);
+    teste_insercao_overflow(isam_cod, NULL);
+    teste_consulta_overflow_por_codigo(isam_cod, NULL);
+    teste_consulta_simples_por_codigo(isam_cod);
+//    menu(isam_cod,NULL);
 
     isam_finalizar(isam_cod);
     fclose(arq_log);
