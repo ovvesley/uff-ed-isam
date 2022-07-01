@@ -380,12 +380,12 @@ void teste_consulta_simples_por_codigo(T_ISAM *isam_cod){
 
 
 
-    consulta_por_cod(isam_cod,2114, 2114);
-    consulta_por_cod(isam_cod,2194, 2194);
-    consulta_por_cod(isam_cod,3482, 3482);
-    consulta_por_cod(isam_cod,3684, 3684);
-    consulta_por_cod(isam_cod,1, NULL);
-    consulta_por_cod(isam_cod,1000, 1000);
+    consulta_por_cod(isam_cod,2114, (void *)2114);
+    consulta_por_cod(isam_cod,2194, (void *)2194);
+    consulta_por_cod(isam_cod,3482, (void *)3482);
+    consulta_por_cod(isam_cod,3684, (void *)3684);
+    consulta_por_cod(isam_cod,1,    (void *)NULL);
+    consulta_por_cod(isam_cod,1000, (void *)1000);
 
 
 
@@ -466,14 +466,14 @@ void teste_consulta_overflow_por_codigo(T_ISAM *isam_cod, T_ISAM *isam_nome){
 
 
 
-    consulta_por_cod(isam_cod,1002, 1002);
-    consulta_por_cod(isam_cod,2304, 2304);
-    consulta_por_cod(isam_cod,1890, 1890);
-    consulta_por_cod(isam_cod,2500, 2500);
-    consulta_por_cod(isam_cod,2550, 2550);
-    consulta_por_cod(isam_cod,2560, 2560);
-    consulta_por_cod(isam_cod,2580, 2580);
-    consulta_por_cod(isam_cod,2585, 2585);
+    consulta_por_cod(isam_cod,1002, (void *) 1002);
+    consulta_por_cod(isam_cod,2304, (void *) 2304);
+    consulta_por_cod(isam_cod,1890, (void *) 1890);
+    consulta_por_cod(isam_cod,2500, (void *) 2500);
+    consulta_por_cod(isam_cod,2550, (void *) 2550);
+    consulta_por_cod(isam_cod,2560, (void *) 2560);
+    consulta_por_cod(isam_cod,2580, (void *) 2580);
+    consulta_por_cod(isam_cod,2585, (void *) 2585);
 
 }
 

@@ -127,16 +127,16 @@ void isam_imprimir_no(T_ISAM *isam, TNo_ISAM *no){
     fprintf(isam->arq_log,"|n=%d|",no->n);
     for (int i=0;i<no->t-1;i++){
         if (no->chaves[i] != INFINITO){
-            fprintf(isam->arq_log,"|c_(%3d)=%3d|",i,no->chaves[i]);
+            fprintf(isam->arq_log,"|c_(%3ld)=%3ld|",i,no->chaves[i]);
         }
         else{
-            fprintf(isam->arq_log,"|c_(%3d)=INF|",i);
+            fprintf(isam->arq_log,"|c_(%3ld)=INF|",i);
         }
     }
     fprintf(isam->arq_log," ");
 
     for (int i=0;i<no->t;i++){
-        fprintf(isam->arq_log,"|f_(%3d)=%3d|",i,no->filhos[i]);
+        fprintf(isam->arq_log,"|f_(%3ld)=%3ld|",i,no->filhos[i]);
 
     }
     if (no->tipo !=INTERNO){
@@ -575,13 +575,15 @@ void *isam_ler_dado_chave_no_folha(T_ISAM *isam, TNo_ISAM *no_folha, void *consu
 
 //Obs.: Funcao auxiliar usada no gabarito para melhor modularizacao - nao e obrigatorio implementa-la
 TNo_ISAM *isam_buscar_no_folha(T_ISAM *isam, void *consulta){
-
+//não implementei
 
 
 }
 
 
 //Busca pelo dado no arquivo de dados que satisfaz a consulta
+// Apenas funcionando para o indice de código. Optei por não implementar a com nome
+
 void* isam_buscar(T_ISAM *isam, void *consulta){
     TFunc * consultafunc = (TFunc *) consulta;
 
@@ -594,6 +596,11 @@ void* isam_buscar(T_ISAM *isam, void *consulta){
     while (no_isam->tipo != FOLHA && no_isam->tipo != OVERFLOW && closed == 0){
         for (int index_i =0; index_i<isam->t-1; index_i++)
         {
+
+//            printar o percurso do no
+//            log_no(isam, no_isam);
+            isam_imprimir_no(isam, no_isam);
+
             TFunc * func = isam_ler_dado_chave_no_interno(isam, no_isam->chaves[index_i]);
 
             if(consultafunc->cod < func->cod)
@@ -630,10 +637,17 @@ void* isam_buscar(T_ISAM *isam, void *consulta){
         for (int index =0; index<isam->t; index++){
             current_no = no_isam;
 
+//          printar percurso do no
+//            log_no(isam, current_no);
+            isam_imprimir_no(isam, no_isam);
+
+
+
             if (current_no->filhos[index] == NULO) continue;
 
             TFunc *dado = isam_ler_dado_chave_no_interno(isam, current_no->filhos[index]);
             if(consultafunc->cod == dado->cod) { found = dado; break; }
+
         }
 
         if (!found && current_no && current_no->prox != NULO){
@@ -646,10 +660,61 @@ void* isam_buscar(T_ISAM *isam, void *consulta){
         }
     }while(!found && !end_overflow);
 
+//    if(found){
+//        printf("\n------------------\n");
+//        printf(">>Registro FOI encontrado");
+//        printf("\n------------------\n");
+//    }else{
+//        printf("\n------------------\n");
+//        printf(">>Registro NÃO encontrado");
+//        printf("\n------------------\n");
+//    }
+
     return found;
 }
 
 
+void log_no(T_ISAM *isam, TNo_ISAM *no){
+    printf("\n>-------Nós da árvore buscados (PERCURSO NO NÓ )-----------\n");
+    printf("\n>-----------------------\n");
+    isam_printar_no(isam, no);
+    printf("\n-----------------------\n");
+}
+
+
+void isam_printar_no(T_ISAM *isam, TNo_ISAM *no){
+
+    switch(no->tipo){
+        case INTERNO: printf("|tipo:I|");
+            break;
+        case FOLHA: printf("|tipo:F|");
+            break;
+        case OVERFLOW: printf("|tipo:O|");
+            break;
+        default:
+            break;
+    };
+
+    printf("|n=%d|",no->n);
+    for (int i=0;i<no->t-1;i++){
+        if (no->chaves[i] != INFINITO){
+            printf("|c_(%3d)=%3ld|",i,no->chaves[i]);
+        }
+        else{
+            printf("|c_(%3d)=INF|",i);
+        }
+    }
+    printf(" ");
+
+    for (int i=0;i<no->t;i++){
+        printf("|f_(%3d)=%3d|",i,no->filhos[i]);
+
+    }
+    if (no->tipo !=INTERNO){
+        printf("|p=%ld|",no->prox);
+    }
+    printf("\n");
+}
 
 
 void isam_insere(T_ISAM *isam,void *dado){
